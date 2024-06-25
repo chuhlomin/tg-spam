@@ -491,6 +491,15 @@ func (s *Server) htmlDetectedSpamHandler(w http.ResponseWriter, _ *http.Request)
 		return
 	}
 
+	// clean up detected spam entries
+	for i, d := range ds {
+		ds[i].Text = strings.ReplaceAll(d.Text, "'", " ")
+		ds[i].Text = strings.ReplaceAll(d.Text, "\n", " ")
+		ds[i].Text = strings.ReplaceAll(d.Text, "\r", " ")
+		ds[i].Text = strings.ReplaceAll(d.Text, "\t", " ")
+		ds[i].Text = strings.ReplaceAll(d.Text, "\"", " ")
+	}
+
 	tmplData := struct {
 		DetectedSpamEntries []storage.DetectedSpamInfo
 		TotalDetectedSpam   int
